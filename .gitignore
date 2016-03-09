@@ -1,0 +1,35 @@
+# Compiled files
+*.pyc
+*.t7
+*.h5
+*.json
+*.caffemodel
+*.html
+*.p
+*.ipynb
+try.lua
+
+# Image Datasets
+data/images
+data/refcoco
+data/refcoco+
+data/refclef
+data/refcocoG
+
+# job
+job
+
+# cache
+cache/data
+cache/vis
+cache/box
+cache/lang
+
+# symlinks
+./data/images/saiapr_tc-12
+./data/images/mscoco
+./cache/data/refcoco_licheng
+./model/vgg
+
+# ipython checkpoints
+*.ipynb_checkpoints
