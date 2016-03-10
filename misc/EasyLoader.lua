@@ -105,42 +105,6 @@ function EasyLoader:__init(opt)
 		print(string.format('assigned %d images to split %s.', #v, k))
 	end
 end
---[[
-For given ref_ann_id, we return
-- st_ann_ids: same-type neighbouring ann_ids (not including itself)
-- dt_ann_ids: different-type neighbouring ann_ids
-Ordered by distance to the input ann_id
-]]
-function EasyLoader:fetch_neighbour_ids(ref_ann_id)
-	local ref_ann = self.Anns[ref_ann_id]
-	local x, y, w, h = unpack(ref_ann['box'])
-	local rx, ry = x+w/2, y+h/2
-	local function compare(ann_id1, ann_id2) 
-		local x, y, w, h = unpack(self.Anns[ann_id1]['box'])
-		local ax1, ay1 = x+w/2, y+h/2
-		local x, y, w, h = unpack(self.Anns[ann_id2]['box'])
-		local ax2, ay2 = x+w/2, y+h/2
-		return (rx-ax1)^2 + (ry-ay1)^2 < (rx-ax2)^2 + (ry-ay2)^2  -- closer --> former
-	end
-	local image = self.Images[ref_ann['image_id']]
-	local ann_ids = image['ann_ids']
-	table.sort(ann_ids, compare)
-
-	local st_ref_ids, st_ann_ids, dt_ref_ids, dt_ann_ids = {}, {}, {}, {}
-	for i = 1, #ann_ids do
-		local ann_id = ann_ids[i]
-		if ann_id ~= ref_ann_id then
-			if self.Anns[ann_id]['category_id'] == ref_ann['category_id'] then
-				table.insert(st_ann_ids, ann_id)
-				if self.annToRef[ann_id] ~= nil then table.insert(st_ref_ids, self.annToRef[ann_id]['ref_id']) end 
-			else
-				table.insert(dt_ann_ids, ann_id)
-				if self.annToRef[ann_id] ~= nil then table.insert(dt_ref_ids, self.annToRef[ann_id]['ref_id']) end
-			end
-		end
-	end
-	return st_ref_ids, st_ann_ids, dt_ref_ids, dt_ann_ids
-end
 
 function EasyLoader:getNumSents(opt)
 	local split = opt.split
